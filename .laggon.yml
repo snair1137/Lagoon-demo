@@ -1,1 +1,9 @@
 docker-compose-yaml: docker-compose.yml
+current: local
+default: local
+lagoons:
+  local:
+    graphql: http://localhost:7070/graphql
+    hostname: localhost
+    port: 2020
+    ui: http://localhost:6060

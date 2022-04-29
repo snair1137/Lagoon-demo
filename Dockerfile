@@ -8,6 +8,6 @@ RUN go mod download
 COPY . . 
 RUN go build -v -o /usr/local/bin/app ./...
 
-EXPOSE 8080
+EXPOSE 8088
 
 CMD ["app"]
