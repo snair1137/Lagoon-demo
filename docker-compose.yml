@@ -1,37 +1,13 @@
-version: '2.3'
+FROM golang:1.18
 
-x-lagoon-project:
-  # Lagoon project name (leave `&lagoon-project` when you edit this)
-  &lagoon-project go-example
+WORKDIR /usr/src/app
 
-x-volumes:
-  &default-volumes
-    # Define all volumes you would like to have real-time mounted into the docker containers
-    volumes:
-      - .:/app:delegated
+COPY go.mod ./
+RUN go mod download
 
-x-environment:
-  &default-environment
-    LAGOON_PROJECT: *lagoon-project
-    # Route that should be used locally, if you are using pygmy, this route *must* end with .docker.amazee.io
-    LAGOON_ROUTE: http://drupal-example.docker.amazee.io
-    # Uncomment if you like to have the system behave like in production
-    #LAGOON_ENVIRONMENT_TYPE: production
-    # Uncomment to enable xdebug and then restart via `docker-compose up -d`
-    #XDEBUG_ENABLE: "true"
+COPY . . 
+RUN go build -v -o /usr/local/bin/app ./...
 
-x-user:
-  &default-user
-    # The default user under which the containers should run. Change this if you are on linux and run with another user than id `1000`.
-    user: '1000'
+EXPOSE 8088
 
-services:
-
-  nginx:
-    build:
-      context: .
-      dockerfile: app.dockerfile
-    labels:
-      lagoon.name: golang
-      lagoon.type: cli
-
+CMD ["app"]
